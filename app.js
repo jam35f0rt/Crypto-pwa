@@ -1,8 +1,11 @@
 const priceContainer = document.getElementById('price-container');
+const favoritesContainer = document.getElementById('favorites-container');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 const searchInput = document.getElementById('search-input');
-const addButton = document.getElementById('add-button');
+const suggestionsList = document.getElementById('suggestions-list');
 const messageContainer = document.getElementById('message-container');
+
+let allCryptos = [];  // Store all cryptocurrencies from Coinbase
 
 // --- Dark Mode Logic ---
 function setDarkMode(isDark) {
@@ -31,8 +34,7 @@ darkModeToggle.addEventListener('click', () => {
     setDarkMode(!isDark);
 });
 
-
-// --- Crypto Price Fetching and Display ---
+// --- Crypto Price and List Fetching ---
 async function fetchCryptoPrice(cryptoCode) {
     try {
         const response = await fetch(`https://api.coinbase.com/v2/prices/${cryptoCode}-USD/spot`);
@@ -44,16 +46,39 @@ async function fetchCryptoPrice(cryptoCode) {
         }
     } catch (error) {
         console.error(`Error fetching ${cryptoCode} price:`, error);
-        return null; // Or handle the error as you see fit.
+        showMessage(`Error fetching price for ${cryptoCode}.`);
+        return null;
     }
 }
 
-async function createCryptoCard(code) {
+async function fetchAllCryptos() {
+    try {
+        const response = await fetch('https://api.coinbase.com/v2/currencies');
+        const data = await response.json();
+        if (data.data && Array.isArray(data.data)) {
+            allCryptos = data.data.map(crypto => ({
+                id: crypto.id,
+                name: crypto.name,
+                symbol: crypto.id // Using ID as symbol (Coinbase uses ID)
+            }));
+        } else {
+            throw new Error('Invalid response for currencies');
+        }
+    } catch (error) {
+        console.error('Error fetching all cryptocurrencies:', error);
+        showMessage('Error fetching cryptocurrency list.');
+    }
+}
+
+
+// --- UI Update Functions ---
+
+async function createCryptoCard(code, isFavorite = false) {
     const price = await fetchCryptoPrice(code);
 
     const card = document.createElement('div');
-    card.classList.add('crypto-price');
-    card.dataset.cryptoCode = code; // Store the code for removal
+    card.classList.add(isFavorite ? 'crypto-favorite' : 'crypto-price'); // Different class for favorites
+    card.dataset.cryptoCode = code;
 
     const title = document.createElement('h2');
     title.textContent = code;
@@ -62,84 +87,61 @@ async function createCryptoCard(code) {
     const priceElement = document.createElement('p');
     priceElement.textContent = price !== null ? `$${price}` : 'N/A';
     card.appendChild(priceElement);
-      // Add remove button
-    const removeButton = document.createElement('button');
-    removeButton.textContent = 'x';
-    removeButton.classList.add('remove-button');
-    removeButton.addEventListener('click', () => removeCrypto(code));
-    card.appendChild(removeButton);
+
+    const button = document.createElement('button');
+    if (isFavorite) {
+        button.innerHTML = '<i class="fas fa-star"></i>';
+        button.classList.add('remove-favorite-button');
+        button.addEventListener('click', () => toggleFavorite(code, button));
+
+    } else {
+        button.innerHTML = '<i class="far fa-star"></i>';
+        button.classList.add('add-favorite-button');
+        button.addEventListener('click', () => toggleFavorite(code, button));
+
+    }
+    card.appendChild(button);
+
+    // Add remove button only to tracked (not favorites)
+    if (!isFavorite) {
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'x';
+        removeButton.classList.add('remove-button');
+        removeButton.addEventListener('click', () => removeCrypto(code));
+        card.appendChild(removeButton);
+    }
+
 
     return card;
 }
 
-
 async function displayPrices() {
-  priceContainer.innerHTML = '';
-  const trackedCryptos = getTrackedCryptos(); // Get from local storage
+    priceContainer.innerHTML = '';
+    const trackedCryptos = getTrackedCryptos();
 
-  for (const code of trackedCryptos) {
-      const card = await createCryptoCard(code);
-      priceContainer.appendChild(card);
-  }
-}
-
-// --- Add Crypto Functionality ---
-addButton.addEventListener('click', async () => {
-    const code = searchInput.value.trim().toUpperCase();
-    if (!code) return;
-    messageContainer.textContent = "";
-
-    if (getTrackedCryptos().includes(code)) {
-       messageContainer.textContent = `${code} is already being tracked.`;
-        searchInput.value = '';
-        return;
+    for (const code of trackedCryptos) {
+        const card = await createCryptoCard(code);
+        priceContainer.appendChild(card);
     }
+}
+async function displayFavorites() {
+    favoritesContainer.innerHTML = '';
+    const favoriteCryptos = getFavorites();
 
-    const price = await fetchCryptoPrice(code); // Check if it's a valid code
-    if (price !== null) {
-      addCryptoToTracking(code);
-      displayPrices(); // Refresh the display
-      searchInput.value = ''; // Clear the input
-       messageContainer.textContent = "";
-    } else {
-      messageContainer.textContent = `Could not find a cryptocurrency with symbol ${code}.`;
+    for (const code of favoriteCryptos) {
+        const card = await createCryptoCard(code, true); // isFavorite = true
+        favoritesContainer.appendChild(card);
     }
-});
-
-// --- Local Storage Management ---
-function getTrackedCryptos() {
-  const stored = localStorage.getItem('trackedCryptos');
-  return stored ? JSON.parse(stored) : ['BTC', 'ETH', 'LTC']; // Default cryptos
 }
-
-function addCryptoToTracking(code) {
-  const trackedCryptos = getTrackedCryptos();
-  trackedCryptos.push(code);
-  localStorage.setItem('trackedCryptos', JSON.stringify(trackedCryptos));
+// Show message
+function showMessage(message) {
+    messageContainer.textContent = message;
+    messageContainer.style.display = 'block'; // Ensure it's visible
+    // Hide the message after 5 seconds
+    setTimeout(() => {
+        messageContainer.style.display = 'none';
+    }, 5000);
 }
+// --- Favorites Management ---
 
-function removeCrypto(code) {
-  let trackedCryptos = getTrackedCryptos();
-  trackedCryptos = trackedCryptos.filter(c => c !== code);
-  localStorage.setItem('trackedCryptos', JSON.stringify(trackedCryptos));
-  displayPrices(); // Update the display
-}
-
-
-// --- Service Worker Registration (No Changes) ---
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('ServiceWorker registered with scope:', registration.scope);
-            })
-            .catch(error => {
-                console.error('ServiceWorker registration failed:', error);
-            });
-    });
-}
-
-// --- Initialization ---
-initializeDarkMode(); // Set initial dark mode
-displayPrices(); // Initial price display
-setInterval(displayPrices, 30000); // Refresh prices
+function getFavorites()
