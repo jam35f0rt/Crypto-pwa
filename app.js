@@ -201,7 +201,7 @@ function toggleFavorite(code, button) {
 // --- Local Storage Management (for Tracked Cryptos - separate from favorites) ---
 function getTrackedCryptos() {
     const stored = localStorage.getItem('trackedCryptos');
-    return stored ? JSON.parse(stored) : ['BTC', 'ETH', 'LTC']; // Default cryptos
+    return stored ? JSON.parse(stored) : ['TOSHI','BTC', 'ETH', 'ALGO']; // Default cryptos
 }
 
 function addCryptoToTracking(code) {
