@@ -1,8 +1,8 @@
 // components/search.js
 
 import { allCryptos, allCurrencies, fetchCryptoPrice, setSelectedCurrency, selectedCurrency } from '../utils/api.js';
-import { addCryptoToTracking, getTrackedCryptos } from './local-storage.js'; // Import
-import { displayPrices, displayFavorites } from './ui-updates.js';
+import { addCryptoToTracking, getTrackedCryptos } from './local-storage.js';
+import { displayPrices, displayFavorites, showMessage } from './ui-updates.js'; // Import showMessage
 import { addFavorite, isFavorite } from './favorites.js';
 
 const cryptoSearchInput = document.getElementById('crypto-search-input');
@@ -11,6 +11,7 @@ const currencySearchInput = document.getElementById('currency-search-input');
 const currencySuggestionsList = document.getElementById('currency-suggestions-list');
 
 // --- Crypto Search ---
+
 function showCryptoSuggestions(suggestions) {
     cryptoSuggestionsList.innerHTML = '';
     if (suggestions.length === 0) {
@@ -20,7 +21,7 @@ function showCryptoSuggestions(suggestions) {
 
     suggestions.forEach(crypto => {
         const listItem = document.createElement('li');
-        listItem.classList.add('suggestions-list')
+        listItem.classList.add('suggestions-list');
         listItem.textContent = `${crypto.name} (${crypto.symbol})`;
 
         const addButton = document.createElement('button');
@@ -28,30 +29,34 @@ function showCryptoSuggestions(suggestions) {
         addButton.classList.add('add-favorite-button');
         addButton.addEventListener('click', (event) => {
             event.stopPropagation();
-            addCryptoToTracking(crypto.symbol);
-            if (!isFavorite(crypto.symbol)) {
-                addFavorite(crypto.symbol);
-            }
-
-            displayPrices();
-            displayFavorites();
-            clearCryptoSearch();
+            addCryptoAndRefresh(crypto.symbol); // Use a helper function
         });
         listItem.appendChild(addButton);
 
         listItem.addEventListener('click', () => {
-            cryptoSearchInput.value = crypto.symbol;
-            addCryptoToTracking(crypto.symbol);
-             if(!isFavorite(crypto.symbol)) {
-                addFavorite(crypto.symbol)
-            }
-            displayPrices();
-            displayFavorites();
-            clearCryptoSearch();
+            cryptoSearchInput.value = crypto.symbol; // Keep this for input filling
+            addCryptoAndRefresh(crypto.symbol); // Use a helper function
         });
         cryptoSuggestionsList.appendChild(listItem);
     });
     cryptoSuggestionsList.style.display = 'block';
+}
+
+
+async function addCryptoAndRefresh(symbol) {
+    const price = await fetchCryptoPrice(symbol); // Check if the symbol is valid
+    if (price !== null) {
+        addCryptoToTracking(symbol);
+         if(!isFavorite(symbol)) {
+                addFavorite(symbol)
+         }
+        displayPrices();
+        displayFavorites();
+        clearCryptoSearch();
+    } else {
+        showMessage(`Could not find or add cryptocurrency: ${symbol}`); // Show error message
+        clearCryptoSearch()
+    }
 }
 
 function clearCryptoSearch() {
@@ -73,6 +78,7 @@ function handleCryptoSearchInput() {
     );
     showCryptoSuggestions(filteredCryptos);
 }
+
 // --- Currency Search ---
 
 function showCurrencySuggestions(suggestions) {
@@ -84,11 +90,11 @@ function showCurrencySuggestions(suggestions) {
 
     suggestions.forEach(currency => {
         const listItem = document.createElement('li');
-        listItem.classList.add('suggestions-list')
+        listItem.classList.add('suggestions-list');
         listItem.textContent = currency.code;
         listItem.addEventListener('click', () => {
-            // currencySearchInput.value = currency.code; // Don't change the input value here
-            setSelectedCurrency(currency.code); // Only update the selectedCurrency
+            setSelectedCurrency(currency.code);
+            currencySearchInput.value = selectedCurrency; // Keep currency input updated
             displayPrices();
             displayFavorites();
             clearCurrencySearch();
@@ -99,10 +105,10 @@ function showCurrencySuggestions(suggestions) {
 }
 
 function clearCurrencySearch() {
-    //  currencySearchInput.value = selectedCurrency; // Don't reset the input value here
     currencySuggestionsList.innerHTML = '';
     currencySuggestionsList.style.display = 'none';
 }
+
 
 function handleCurrencySearchInput() {
     const searchTerm = currencySearchInput.value.trim().toUpperCase();
@@ -130,15 +136,12 @@ export function setupCryptoSearch() {
 
 export function setupCurrencySearch() {
     currencySearchInput.addEventListener('input', handleCurrencySearchInput);
-    // currencySearchInput.value = selectedCurrency // NO - Move this to initializeCurrencyInput
-
     document.addEventListener('click', (event) => {
         if (!currencySearchInput.contains(event.target) && !currencySuggestionsList.contains(event.target)) {
             currencySuggestionsList.style.display = 'none';
         }
     });
 }
-// Add this new function to initialize the currency input:
 export function initializeCurrencyInput() {
     currencySearchInput.value = selectedCurrency;
 }

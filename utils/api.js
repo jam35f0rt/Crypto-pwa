@@ -1,4 +1,18 @@
 // utils/api.js
+
+export let allCryptos = [  // Pre-populate with common cryptos
+    { id: 'BTC', name: 'Bitcoin', symbol: 'BTC' },
+    { id: 'ETH', name: 'Ethereum', symbol: 'ETH' },
+    { id: 'LTC', name: 'Litecoin', symbol: 'LTC' },
+    { id: 'XRP', name: 'Ripple', symbol: 'XRP' },
+    { id: 'BCH', name: 'Bitcoin Cash', symbol: 'BCH' },
+    { id: 'ADA', name: 'Cardano', symbol: 'ADA' },
+    { id: 'SOL', name: 'Solana', symbol: 'SOL' },
+    {id: 'DOGE', name: 'Dogecoin', symbol: 'DOGE'}
+];
+export let allCurrencies = [];
+export let selectedCurrency = 'USD';
+
 export async function fetchCryptoPrice(cryptoCode, currency = 'USD') {
     try {
         const response = await fetch(`https://api.coinbase.com/v2/prices/${cryptoCode}-${currency}/spot`);
@@ -6,36 +20,15 @@ export async function fetchCryptoPrice(cryptoCode, currency = 'USD') {
         if (data.data && data.data.amount) {
             return data.data.amount;
         } else {
-            throw new Error(`Invalid response for ${cryptoCode}`);
+            throw new Error(`Invalid response for ${cryptoCode}-${currency}`); // More specific error
         }
     } catch (error) {
-        console.error(`Error fetching ${cryptoCode} price:`, error);
-        return null; // Return null on error
+        console.error(`Error fetching ${cryptoCode}-${currency} price:`, error);
+        return null; // Return null on error, handle in UI
     }
 }
-
-export let allCryptos = []; // Export so it can be used in search.js
-export let allCurrencies = [];
-export let selectedCurrency = 'USD'
-
-export async function fetchAllCryptos() {
-    try {
-        const response = await fetch('https://api.coinbase.com/v2/currencies');
-        const data = await response.json();
-        if (data.data && Array.isArray(data.data)) {
-            allCryptos = data.data.map(crypto => ({
-                id: crypto.id,  //Keep id
-                name: crypto.name,
-                symbol: crypto.id // Using ID as symbol (Coinbase uses ID)
-            }));
-        } else {
-            throw new Error('Invalid response for currencies');
-        }
-    } catch (error) {
-        console.error('Error fetching all cryptocurrencies:', error);
-         throw error; // Re-throw for handling in the caller
-    }
-}
+// No longer needed, as allCryptos is prepopulated
+// export async function fetchAllCryptos() { ... }
 
 export async function fetchAllCurrencies() {
     try {
@@ -45,7 +38,7 @@ export async function fetchAllCurrencies() {
         if (data.data && data.data.rates) {
             allCurrencies = Object.keys(data.data.rates).map(code => ({
                 code: code,
-                // name: "" // No name available in this API
+                //  name:  "",  No name available in this API response.
             }));
 		} else {
 			throw new Error('Invalid response for exchange rates');
@@ -55,6 +48,7 @@ export async function fetchAllCurrencies() {
         throw error; // Re-throw for handling in the caller
     }
 }
-export function setSelectedCurrency(currency){
-    selectedCurrency = currency
+
+export function setSelectedCurrency(currency) {
+    selectedCurrency = currency;
 }

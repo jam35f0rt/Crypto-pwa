@@ -1,6 +1,6 @@
 // app.js
 import { initializeDarkMode, setupDarkModeToggle } from './components/dark-mode.js';
-import { fetchAllCryptos, fetchAllCurrencies } from './utils/api.js';
+import { fetchAllCryptos, fetchAllCurrencies } from './utils/api.js'; //No need to import fetch all crypto
 import { displayPrices, displayFavorites, showMessage, setupRemoveCryptoHandlers } from './components/ui-updates.js';
 import { setupCryptoSearch, setupCurrencySearch, initializeCurrencyInput } from './components/search.js'; // Import initializeCurrencyInput
 import { getFavorites, toggleFavorite, isFavorite } from './components/favorites.js';
@@ -11,7 +11,7 @@ async function initializeApp() {
 
     try {
         // Await both fetches!  This is the KEY FIX.
-        await fetchAllCryptos();
+        // await fetchAllCryptos(); // No need to fetch all crypto.
         await fetchAllCurrencies();
 
         setupCryptoSearch();
