@@ -1,5 +1,4 @@
 // utils/api.js
-
 export let allCryptos = [
     { id: 'BTC', name: 'Bitcoin', symbol: 'BTC' },
     { id: 'ETH', name: 'Ethereum', symbol: 'ETH' },
