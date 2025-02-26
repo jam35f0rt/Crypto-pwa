@@ -117,16 +117,17 @@ function clearCurrencySearch() {
 
 function handleCurrencySearchInput() {
     const searchTerm = currencySearchInput.value.trim().toUpperCase();
+
     if (searchTerm.length === 0) {
         clearCurrencySearch();
-		currencySearchInput.value = selectedCurrency;
+        // Don't reset to selectedCurrency here! Allow empty input.
         return;
     }
 
-    const filteredCurrencies = allCurrencies.filter(currency =>  // Pass filteredCurrencies
+    const filteredCurrencies = allCurrencies.filter(currency =>
         currency.code.includes(searchTerm)
     );
-    showCurrencySuggestions(filteredCurrencies); // Show the *filtered* list
+    showCurrencySuggestions(filteredCurrencies);
 }
 
 // --- Setup ---

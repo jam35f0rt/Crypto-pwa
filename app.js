@@ -1,6 +1,6 @@
 // app.js
 import { initializeDarkMode, setupDarkModeToggle } from './components/dark-mode.js';
-import {  fetchAllCurrencies } from './utils/api.js'; //No need to import fetch all crypto
+import {  fetchAllCurrencies, setSelectedCurrency } from './utils/api.js'; //No need to import fetch all crypto
 import { displayPrices, displayFavorites, showMessage, setupRemoveCryptoHandlers } from './components/ui-updates.js';
 import { setupCryptoSearch, setupCurrencySearch, initializeCurrencyInput } from './components/search.js';
 import { getFavorites, toggleFavorite, isFavorite } from './components/favorites.js';
@@ -11,7 +11,7 @@ async function initializeApp() {
 
     try {
         // await fetchAllCryptos(); // No, it's pre-populated now.
-        await fetchAllCurrencies(); // Fetch initial currencies
+        await setSelectedCurrency("USD") // Set and fetch initial currencies
 
         setupCryptoSearch();
         setupCurrencySearch();
