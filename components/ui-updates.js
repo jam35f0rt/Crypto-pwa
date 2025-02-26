@@ -1,6 +1,6 @@
 // components/ui-updates.js
 import { fetchCryptoPrice, selectedCurrency } from '../utils/api.js';
-import { isFavorite, toggleFavorite } from './favorites.js'; // Import favorites functions
+import { isFavorite, toggleFavorite, getFavorites } from './favorites.js'; // CORRECT import
 import { getTrackedCryptos, removeCryptoFromTracking } from './local-storage.js';
 
 
@@ -92,7 +92,7 @@ export async function displayPrices() {
 
 export async function displayFavorites() {
     favoritesContainer.innerHTML = '';
-    const favoriteCryptos = getFavorites();
+    const favoriteCryptos = getFavorites(); // Get favorites
 
     // Use Promise.all for favorites as well
     await Promise.all(favoriteCryptos.map(async (code) => {
