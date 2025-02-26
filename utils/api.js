@@ -8,7 +8,7 @@ export let allCryptos = [  // Pre-populate with common cryptos
     { id: 'BCH', name: 'Bitcoin Cash', symbol: 'BCH' },
     { id: 'ADA', name: 'Cardano', symbol: 'ADA' },
     { id: 'SOL', name: 'Solana', symbol: 'SOL' },
-    {id: 'DOGE', name: 'Dogecoin', symbol: 'DOGE'}
+    { id: 'DOGE', name: 'Dogecoin', symbol: 'DOGE' }
 ];
 export let allCurrencies = [];
 export let selectedCurrency = 'USD';
@@ -50,4 +50,3 @@ export async function fetchAllCurrencies(baseCurrency = 'USD') { // Base currenc
 export function setSelectedCurrency(currency) {
     selectedCurrency = currency;
 }
-

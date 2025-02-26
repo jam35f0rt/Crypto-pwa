@@ -10,7 +10,7 @@ const messageContainer = document.getElementById('message-container');
 
 
 export async function createCryptoCard(code, isFavoriteCard = false) {
-    const price = await fetchCryptoPrice(code, selectedCurrency);
+    const price = await fetchCryptoPrice(code, selectedCurrency); // Use selected currency
 
     const card = document.createElement('div');
     card.classList.add(isFavoriteCard ? 'crypto-favorite' : 'crypto-price');
@@ -21,8 +21,9 @@ export async function createCryptoCard(code, isFavoriteCard = false) {
     card.appendChild(title);
 
     const priceElement = document.createElement('p');
-    priceElement.textContent = price !== null ? `${price} ${selectedCurrency}` : 'N/A';
+    priceElement.textContent = price !== null ? `${price} ${selectedCurrency}` : 'N/A';  // Display currency
     card.appendChild(priceElement);
+
 
     const favButton = document.createElement('button');
     if (isFavoriteCard) {
@@ -82,20 +83,22 @@ export async function displayPrices() {
     priceContainer.innerHTML = '';
     const trackedCryptos = getTrackedCryptos();
 
-    for (const code of trackedCryptos) {
-        const card = await createCryptoCard(code);
+    // Use Promise.all to wait for ALL cards to be created
+    await Promise.all(trackedCryptos.map(async (code) => {
+        const card = await createCryptoCard(code); // AWAIT the card creation
         priceContainer.appendChild(card);
-    }
+    }));
 }
 
 export async function displayFavorites() {
     favoritesContainer.innerHTML = '';
-    const favoriteCryptos = getFavorites(); // Get favorites
+    const favoriteCryptos = getFavorites();
 
-    for (const code of favoriteCryptos) {
-        const card = await createCryptoCard(code, true); // Pass true for favorite cards
+    // Use Promise.all for favorites as well
+    await Promise.all(favoriteCryptos.map(async (code) => {
+        const card = await createCryptoCard(code, true); // AWAIT, and pass true for favorites
         favoritesContainer.appendChild(card);
-    }
+    }));
 }
 
 export function showMessage(message) {
