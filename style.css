@@ -1,163 +1,180 @@
-    /* General Styles */
-    body {
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f3f4f6; /* Light mode background */
-        color: #1f2937; /* Light mode text */
-        transition: background-color 0.3s, color 0.3s; /* Smooth transition */
-    }
-
-    .dark body {
-        background-color: #1f2937; /* Dark mode background */
-        color: #f3f4f6; /* Dark mode text */
-    }
-
-    .container {
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        background-color: white; /* Light mode card */
-    }
-    .dark .container {
-        background-color: #374151; /* Dark mode card */
-        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-    }
-
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    h1 {
-        font-size: 2rem;
-        font-weight: bold;
-    }
-
-    /* Dark Mode Toggle Button */
-    #dark-mode-toggle {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        font-size: 1.2rem;
-    }
-
-    .icon {
-        width: 24px;
-        height: 24px;
-        stroke: #1f2937; /* Light mode icon color */
-        transition: opacity 0.3s, transform 0.3s; /* Smooth transition for icons */
-    }
-
-    .dark .icon {
-        stroke: #f3f4f6; /* Dark mode icon color */
-    }
-    #moon-icon {
-        display: none; /* Hide moon by default */
-    }
-
-    .dark #sun-icon {
-        display: none;
-    }
-
-    .dark #moon-icon {
-        display: block;
-    }
-
-    /* Crypto Price Cards */
-   .crypto-price, .crypto-favorite {
-        border: 1px solid #e5e7eb;
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 8px;
-        text-align: center;
-        transition: border-color 0.3s, box-shadow 0.3s;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-
-    .dark .crypto-price, .dark .crypto-favorite {
-        border-color: #4b5563;
-    }
-
-    .crypto-price h2, .crypto-favorite h2 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 5px;
-        color: #374151;
-        margin: 0; /* Remove default margin */
-    }
-
-    .dark .crypto-price h2, .dark .crypto-favorite h2 {
-        color: #d1d5db;
-    }
-
-    .crypto-price p {
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin: 0; /* Remove default margin */
-    }
-
-    .loading,
-    .error {
-        text-align: center;
-        padding: 10px;
-    }
-
-    .error {
-        color: #ef4444; /* Red color for errors */
-    }
-
-    /* Search and Add */
-.search-container {
-    margin-bottom: 20px;
-    position: relative; /* For absolute positioning of the suggestions */
+/* General Styles */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6; /* Light mode background */
+    color: #1f2937; /* Light mode text */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
 }
 
-#search-input {
+.dark body {
+    background-color: #1f2937; /* Dark mode background */
+    color: #f3f4f6; /* Dark mode text */
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: white; /* Light mode card */
+}
+
+.dark .container {
+    background-color: #374151; /* Dark mode card */
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Dark Mode Toggle Button */
+#dark-mode-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2rem;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    stroke: #1f2937; /* Light mode icon color */
+    transition: opacity 0.3s, transform 0.3s; /* Smooth transition for icons */
+}
+
+.dark .icon {
+    stroke: #f3f4f6; /* Dark mode icon color */
+}
+
+#moon-icon {
+    display: none; /* Hide moon by default */
+}
+
+.dark #sun-icon {
+    display: none;
+}
+
+.dark #moon-icon {
+    display: block;
+}
+
+/* Crypto Price Cards */
+.crypto-price,
+.crypto-favorite {
+    border: 1px solid #e5e7eb;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    text-align: center;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dark .crypto-price,
+.dark .crypto-favorite {
+    border-color: #4b5563;
+}
+
+.crypto-price h2,
+.crypto-favorite h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #374151;
+    margin: 0;
+    /* Remove default margin */
+}
+
+.dark .crypto-price h2,
+.dark .crypto-favorite h2 {
+    color: #d1d5db;
+}
+
+.crypto-price p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    /* Remove default margin */
+}
+
+.loading,
+.error {
+    text-align: center;
+    padding: 10px;
+}
+
+.error {
+    color: #ef4444;
+    /* Red color for errors */
+}
+
+/* Search and Add */
+.search-container {
+    margin-bottom: 20px;
+    position: relative;
+    /* For absolute positioning of the suggestions */
+}
+
+#crypto-search-input, #currency-search-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-     box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-.dark #search-input {
+.dark #crypto-search-input, .dark #currency-search-input {
     color: #fff;
     border-color: #6b7280;
     background-color: #242933;
 }
 
-#suggestions-list {
+.suggestions-list {
     list-style: none;
     padding: 0;
     margin: 0;
     position: absolute;
-    top: 100%; /* Position below the input */
+    top: 100%;
+    /* Position below the input */
     left: 0;
     right: 0;
     background-color: white;
     border: 1px solid #ccc;
-    border-top: none; /* Remove top border */
-    border-radius: 0 0 4px 4px; /* Round bottom corners */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    z-index: 10; /* Ensure it's above other content */
-     max-height: 200px; /* Limit height and add scroll */
+    border-top: none;
+    /* Remove top border */
+    border-radius: 0 0 4px 4px;
+    /* Round bottom corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    /* Ensure it's above other content */
+    max-height: 200px;
+    /* Limit height and add scroll */
     overflow-y: auto;
-}
-.dark #suggestions-list{
-    background-color: #374151;
-     border-color: #6b7280;
+    display: none; /* Hide by default */
+
 }
 
-#suggestions-list li {
+.dark .suggestions-list {
+    background-color: #374151;
+    border-color: #6b7280;
+}
+
+.suggestions-list li {
     padding: 8px 12px;
     cursor: pointer;
     display: flex;
@@ -165,11 +182,11 @@
     align-items: center;
 }
 
-#suggestions-list li:hover {
+.suggestions-list li:hover {
     background-color: #f0f0f0;
 }
 
-.dark #suggestions-list li:hover{
+.dark .suggestions-list li:hover {
     background-color: #4b5563
 }
 
@@ -178,13 +195,16 @@
     border: none;
     cursor: pointer;
     font-size: 1rem;
-    color: #3b82f6; /* Default blue color */
-}
-.dark .add-favorite-button{
-        color: #60a5fa
+    color: #3b82f6;
+    /* Default blue color */
 }
 
-.remove-favorite-button, .remove-button {
+.dark .add-favorite-button {
+    color: #60a5fa
+}
+
+.remove-favorite-button,
+.remove-button {
     background: none;
     border: none;
     color: #ef4444;
@@ -192,7 +212,8 @@
     font-size: 1rem;
 }
 
-.dark .remove-favorite-button, .dark .remove-button {
+.dark .remove-favorite-button,
+.dark .remove-button {
     color: #f87171;
 }
 
@@ -205,26 +226,28 @@
 .dark #message-container {
     color: #f87171;
 }
-/* Hide suggestions by default */
-#suggestions-list {
-    display: none;
-}
+
+
+
 /* Favorites and Tracked sections */
-#favorites-container, #price-container {
-  margin-top: 1rem;
+#favorites-container,
+#price-container {
+    margin-top: 1rem;
 }
 
 h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: #333;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
 }
 
 .dark h2 {
-  color: #ddd;
+    color: #ddd;
 }
+
 /* Adjust spacing in crypto cards */
-.crypto-price > *, .crypto-favorite > * {
-  margin: 0.25rem 0;
+.crypto-price > *,
+.crypto-favorite > * {
+    margin: 0.25rem 0;
 }
