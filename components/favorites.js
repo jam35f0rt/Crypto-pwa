@@ -1,5 +1,5 @@
 // components/favorites.js
-import { displayFavorites } from './ui-updates';
+import { displayFavorites } from './ui-updates.js';
 
 export function getFavorites() {
     const stored = localStorage.getItem('favoriteCryptos');
