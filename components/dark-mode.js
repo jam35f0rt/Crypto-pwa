@@ -1,29 +1,20 @@
 // components/dark-mode.js
-
-export function setDarkMode(isDark) {
-    if (isDark) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-}
+const darkModeToggle = document.getElementById('dark-mode-toggle');
 
 export function initializeDarkMode() {
-    const savedDarkMode = localStorage.getItem('darkMode');
-    if (savedDarkMode === 'enabled') {
-        setDarkMode(true);
-    } else if (savedDarkMode === 'disabled') {
-        setDarkMode(false);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setDarkMode(true);
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedDarkMode = localStorage.getItem('darkMode');
+
+    if (storedDarkMode === 'true' || (storedDarkMode === null && prefersDarkMode)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark'); // Ensure light mode if not enabled.
     }
 }
 
 export function setupDarkModeToggle() {
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
     darkModeToggle.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.contains('dark');
-        setDarkMode(!isDark);
+        const isDarkMode = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('darkMode', isDarkMode);
     });
 }

@@ -101,4 +101,17 @@ export function showMessage(message) {
 export function setupRemoveCryptoHandlers() {
     priceContainer.addEventListener('click', (event) => {
         if (event.target.classList.contains('remove-button')) {
-            const
+            const card = event.target.closest('.crypto-price');
+            if (card) {
+                const cryptoBasePair = card.dataset.cryptoCode; // Get full pair
+                removeCryptoFromTracking(cryptoBasePair);
+                if (isFavorite(cryptoBasePair)) {
+                    toggleFavorite(cryptoBasePair);
+                    displayFavorites();
+                }
+                displayPrices();
+            }
+        }
+    });
+}
+

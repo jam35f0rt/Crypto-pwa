@@ -1,20 +1,26 @@
 // components/local-storage.js
+const trackedCryptosKey = 'trackedCryptos';
 
 export function getTrackedCryptos() {
-    const stored = localStorage.getItem('trackedCryptos');
-    return stored ? JSON.parse(stored) : ['BTC', 'ETH', 'LTC'];  // Default cryptos
-}
-
-export function addCryptoToTracking(code) {
-    const trackedCryptos = getTrackedCryptos();
-    if (!trackedCryptos.includes(code)) {
-        trackedCryptos.push(code);
-        localStorage.setItem('trackedCryptos', JSON.stringify(trackedCryptos));
+    try {
+        const tracked = JSON.parse(localStorage.getItem(trackedCryptosKey)) || [];
+        return tracked;
+    } catch (error) {
+        console.error("Error parsing trackedCryptos from localStorage:", error);
+        return [];  // Return empty array on error.
     }
 }
 
-export function removeCryptoFromTracking(code) {
+export function addCryptoToTracking(cryptoCode) {
+    const trackedCryptos = getTrackedCryptos();
+    if (!trackedCryptos.includes(cryptoCode)) {
+        trackedCryptos.push(cryptoCode);
+        localStorage.setItem(trackedCryptosKey, JSON.stringify(trackedCryptos));
+    }
+}
+
+export function removeCryptoFromTracking(cryptoCode) {
     let trackedCryptos = getTrackedCryptos();
-    trackedCryptos = trackedCryptos.filter(c => c !== code);
-    localStorage.setItem('trackedCryptos', JSON.stringify(trackedCryptos));
+    trackedCryptos = trackedCryptos.filter(code => code !== cryptoCode);
+    localStorage.setItem(trackedCryptosKey, JSON.stringify(trackedCryptos));
 }
