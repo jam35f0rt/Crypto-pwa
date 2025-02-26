@@ -29,34 +29,28 @@ function showCryptoSuggestions(suggestions) {
         addButton.classList.add('add-favorite-button');
         addButton.addEventListener('click', (event) => {
             event.stopPropagation();
-            addCryptoAndRefresh(crypto.symbol); // Use a helper function
+            addCryptoAndRefresh(crypto.symbol);
         });
         listItem.appendChild(addButton);
 
         listItem.addEventListener('click', () => {
-            cryptoSearchInput.value = crypto.symbol; // Keep this for input filling
-            addCryptoAndRefresh(crypto.symbol); // Use a helper function
+            cryptoSearchInput.value = crypto.symbol;
+            addCryptoAndRefresh(crypto.symbol);
         });
         cryptoSuggestionsList.appendChild(listItem);
     });
     cryptoSuggestionsList.style.display = 'block';
 }
 
-
 async function addCryptoAndRefresh(symbol) {
-    const price = await fetchCryptoPrice(symbol, selectedCurrency); // Check if the symbol is valid
-    if (price !== null) {
-        addCryptoToTracking(symbol);
-        if(!isFavorite(symbol)) {
-            addFavorite(symbol)
-        }
-        displayPrices();
-        displayFavorites();
-        clearCryptoSearch();
-    } else {
-        showMessage(`Could not find or add cryptocurrency: ${symbol}`); // Show error message
-        clearCryptoSearch()
+    // No need to check the price here.  displayPrices() will handle that.
+    addCryptoToTracking(symbol);
+    if (!isFavorite(symbol)) {
+        addFavorite(symbol);
     }
+    displayPrices();
+    displayFavorites();
+    clearCryptoSearch();
 }
 
 function clearCryptoSearch() {
@@ -92,9 +86,9 @@ function showCurrencySuggestions(suggestions) {
         const listItem = document.createElement('li');
         listItem.classList.add('suggestions-list');
         listItem.textContent = currency.code;
-        listItem.addEventListener('click', async () => { // Make this handler async
+        listItem.addEventListener('click', async () => {
             try {
-                await setSelectedCurrency(currency.code); // AWAIT the currency change
+                await setSelectedCurrency(currency.code);
                 currencySearchInput.value = selectedCurrency;
                 displayPrices();
                 displayFavorites();
@@ -102,7 +96,6 @@ function showCurrencySuggestions(suggestions) {
             } catch (error) {
                 showMessage("Failed to update currencies. Check your internet connection.");
             }
-
         });
         currencySuggestionsList.appendChild(listItem);
     });
@@ -114,13 +107,11 @@ function clearCurrencySearch() {
     currencySuggestionsList.style.display = 'none';
 }
 
-
 function handleCurrencySearchInput() {
     const searchTerm = currencySearchInput.value.trim().toUpperCase();
 
     if (searchTerm.length === 0) {
         clearCurrencySearch();
-        // Don't reset to selectedCurrency here! Allow empty input.
         return;
     }
 
@@ -149,6 +140,7 @@ export function setupCurrencySearch() {
         }
     });
 }
+
 export function initializeCurrencyInput() {
     currencySearchInput.value = selectedCurrency;
 }

@@ -1,14 +1,9 @@
 // utils/api.js
-export let allCryptos = [
-    { id: 'BTC', name: 'Bitcoin', symbol: 'BTC' },
-    { id: 'ETH', name: 'Ethereum', symbol: 'ETH' },
-    { id: 'TOSHI', name: 'Toshi', symbol: 'TOSHI' }
-];
+export let allCryptos = [];
 export let allCurrencies = [];
-export let selectedCurrency = ''; // Initialize as empty string
+export let selectedCurrency = '';
 
 export async function fetchCryptoPrice(cryptoCode, currency = 'USD') {
-    // Default to USD if currency is empty
     const usedCurrency = currency || 'USD';
     try {
         const response = await fetch(`https://api.coinbase.com/v2/prices/${cryptoCode}-${usedCurrency}/spot`);
@@ -23,12 +18,30 @@ export async function fetchCryptoPrice(cryptoCode, currency = 'USD') {
         return null;
     }
 }
-
+export async function fetchAllCryptos() {
+    try {
+        const response = await fetch('https://api.coinbase.com/v2/currencies');
+        const data = await response.json();
+        if (data.data && Array.isArray(data.data)) {
+            allCryptos = data.data
+                .filter(crypto => crypto.type === 'crypto') //Filter by type
+                .map(crypto => ({
+                    id: crypto.code, // Use 'code' for id.
+                    name: crypto.name,
+                    symbol: crypto.code // Use 'code' for symbol
+                }));
+        } else {
+            throw new Error('Invalid response format for cryptocurrencies');
+        }
+    } catch (error) {
+        console.error('Error fetching all cryptocurrencies:', error);
+        throw error; // Re-throw to be handled by the caller
+    }
+}
 export async function fetchAllCurrencies(baseCurrency = 'USD') {
     try {
         const response = await fetch(`https://api.coinbase.com/v2/exchange-rates?currency=${baseCurrency}`);
         const data = await response.json();
-
         if (data.data && data.data.rates) {
             allCurrencies = Object.keys(data.data.rates).map(code => ({
                 code: code,
@@ -38,13 +51,13 @@ export async function fetchAllCurrencies(baseCurrency = 'USD') {
         }
     } catch (error) {
         console.error('Error fetching all currencies:', error);
-        throw error;
+        throw error; // Re-throw for handling
     }
 }
 
 export async function setSelectedCurrency(currency) {
     selectedCurrency = currency;
-    if (selectedCurrency) { // Only fetch if a currency is selected
+    if (selectedCurrency) {
         await fetchAllCurrencies(selectedCurrency);
     }
 }
