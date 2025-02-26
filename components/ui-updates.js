@@ -1,5 +1,5 @@
 // components/ui-updates.js
-import { fetchCryptoPrice } from '../utils/api.js';
+import { fetchCryptoPrice, selectedCurrency } from '../utils/api.js';
 import { isFavorite, toggleFavorite } from './favorites.js';
 import { getTrackedCryptos, removeCryptoFromTracking } from './local-storage.js';
 
@@ -19,7 +19,7 @@ export async function createCryptoCard(cryptoBasePair, isFavoriteCard = false) {
     card.appendChild(title);
 
     const priceElement = document.createElement('p');
-    priceElement.textContent = price !== null ? `$${price}` : 'N/A'; // Display price
+    priceElement.textContent = price !== null ? `${price} ${selectedCurrency}` : 'N/A';  // Display price
     card.appendChild(priceElement);
 
     const favButton = document.createElement('button');
@@ -114,4 +114,3 @@ export function setupRemoveCryptoHandlers() {
         }
     });
 }
-
