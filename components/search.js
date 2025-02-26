@@ -2,7 +2,7 @@
 
 import { allCryptos, allCurrencies, fetchCryptoPrice, setSelectedCurrency, selectedCurrency } from '../utils/api.js';
 import { addCryptoToTracking, getTrackedCryptos } from './local-storage.js';
-import { displayPrices, displayFavorites, showMessage } from './ui-updates.js'; // Import showMessage
+import { displayPrices, displayFavorites, showMessage } from './ui-updates.js';
 import { addFavorite, isFavorite } from './favorites.js';
 
 const cryptoSearchInput = document.getElementById('crypto-search-input');
@@ -47,9 +47,9 @@ async function addCryptoAndRefresh(symbol) {
     const price = await fetchCryptoPrice(symbol, selectedCurrency); // Check if the symbol is valid
     if (price !== null) {
         addCryptoToTracking(symbol);
-         if(!isFavorite(symbol)) {
-                addFavorite(symbol)
-         }
+        if(!isFavorite(symbol)) {
+            addFavorite(symbol)
+        }
         displayPrices();
         displayFavorites();
         clearCryptoSearch();
@@ -92,19 +92,17 @@ function showCurrencySuggestions(suggestions) {
         const listItem = document.createElement('li');
         listItem.classList.add('suggestions-list');
         listItem.textContent = currency.code;
-        listItem.addEventListener('click', () => {
-            setSelectedCurrency(currency.code);
-            currencySearchInput.value = selectedCurrency; // Keep currency input updated
-             fetchAllCurrencies(selectedCurrency) // VERY IMPORTANT: Re-fetch currencies
-                .then(() => { // Use .then() to ensure re-fetch completes
-                    displayPrices();
-                    displayFavorites();
-                    clearCurrencySearch();
-                })
-				.catch(error => {
-					console.error("Error re-fetching currencies:", error);
-                    showMessage("Failed to update currencies. Check your internet connection.");
-				});
+        listItem.addEventListener('click', async () => { // Make this handler async
+            try {
+                await setSelectedCurrency(currency.code); // AWAIT the currency change
+                currencySearchInput.value = selectedCurrency;
+                displayPrices();
+                displayFavorites();
+                clearCurrencySearch();
+            } catch (error) {
+                showMessage("Failed to update currencies. Check your internet connection.");
+            }
+
         });
         currencySuggestionsList.appendChild(listItem);
     });
@@ -121,13 +119,14 @@ function handleCurrencySearchInput() {
     const searchTerm = currencySearchInput.value.trim().toUpperCase();
     if (searchTerm.length === 0) {
         clearCurrencySearch();
+		currencySearchInput.value = selectedCurrency;
         return;
     }
 
-    const filteredCurrencies = allCurrencies.filter(currency =>
+    const filteredCurrencies = allCurrencies.filter(currency =>  // Pass filteredCurrencies
         currency.code.includes(searchTerm)
     );
-    showCurrencySuggestions(filteredCurrencies);
+    showCurrencySuggestions(filteredCurrencies); // Show the *filtered* list
 }
 
 // --- Setup ---

@@ -24,8 +24,9 @@ async function initializeApp() {
         setupRemoveCryptoHandlers();
 
     } catch (error) {
+        // Handle errors during initialization (e.g., API failures)
         showMessage("Failed to initialize app. Check your internet connection.");
-        console.error("Initialization error:", error);
+        console.error("Initialization error:", error); // Log the error for debugging.
     }
 }
 
