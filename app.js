@@ -95,7 +95,7 @@ async function createCryptoCard(code, isFavorite = false) {
         button.addEventListener('click', () => toggleFavorite(code, button));
 
     } else {
-        button.innerHTML = '<i class="far fa-star"></i>';
+        button.innerHTML = '<i class="far fa-star"></i>'; // Use regular star for non-favorites
         button.classList.add('add-favorite-button');
         button.addEventListener('click', () => toggleFavorite(code, button));
 
@@ -144,4 +144,175 @@ function showMessage(message) {
 }
 // --- Favorites Management ---
 
-function getFavorites()
+function getFavorites() {
+    const stored = localStorage.getItem('favoriteCryptos');
+    return stored ? JSON.parse(stored) : [];
+}
+
+function isFavorite(code) {
+    return getFavorites().includes(code);
+}
+
+function addFavorite(code) {
+    const favorites = getFavorites();
+    if (!favorites.includes(code)) {
+        favorites.push(code);
+        localStorage.setItem('favoriteCryptos', JSON.stringify(favorites));
+    }
+}
+
+function removeFavorite(code) {
+    let favorites = getFavorites();
+    favorites = favorites.filter(c => c !== code);
+    localStorage.setItem('favoriteCryptos', JSON.stringify(favorites));
+}
+
+function toggleFavorite(code, button) {
+    if (isFavorite(code)) {
+        removeFavorite(code);
+        button.innerHTML = '<i class="far fa-star"></i>'; // Change to outline star
+          // If it's in the favorites section, remove the card
+        const favoriteCard = favoritesContainer.querySelector(`[data-crypto-code="${code}"]`);
+        if (favoriteCard) {
+            favoriteCard.remove();
+        }
+        //Update button on price container.
+        const priceCardButton = priceContainer.querySelector(`[data-crypto-code="${code}"] .add-favorite-button`);
+
+        if(priceCardButton) {
+            priceCardButton.innerHTML = '<i class="far fa-star"></i>'
+        }
+
+
+    } else {
+        addFavorite(code);
+        button.innerHTML = '<i class="fas fa-star"></i>'; // Change to solid star
+         // If it's not in the favorites section, add the card
+        displayFavorites()
+        const priceCardButton = priceContainer.querySelector(`[data-crypto-code="${code}"] .add-favorite-button`);
+        if(priceCardButton) {
+          priceCardButton.innerHTML = '<i class="fas fa-star"></i>'
+        }
+    }
+
+}
+
+
+// --- Local Storage Management (for Tracked Cryptos - separate from favorites) ---
+function getTrackedCryptos() {
+    const stored = localStorage.getItem('trackedCryptos');
+    return stored ? JSON.parse(stored) : ['BTC', 'ETH', 'LTC']; // Default cryptos
+}
+
+function addCryptoToTracking(code) {
+    const trackedCryptos = getTrackedCryptos();
+    if (!trackedCryptos.includes(code)) { // Prevent duplicates
+        trackedCryptos.push(code);
+        localStorage.setItem('trackedCryptos', JSON.stringify(trackedCryptos));
+    }
+}
+
+function removeCrypto(code) {
+    let trackedCryptos = getTrackedCryptos();
+    trackedCryptos = trackedCryptos.filter(c => c !== code);
+    localStorage.setItem('trackedCryptos', JSON.stringify(trackedCryptos));
+    displayPrices(); // Update the display
+
+}
+
+// --- Search and Suggestions ---
+
+function showSuggestions(suggestions) {
+    suggestionsList.innerHTML = ''; // Clear previous suggestions
+    if (suggestions.length === 0) {
+        suggestionsList.style.display = 'none'; // Hide if no suggestions
+        return;
+    }
+
+    suggestions.forEach(crypto => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${crypto.name} (${crypto.symbol})`;
+        const addButton = document.createElement('button');
+        addButton.textContent = '+';
+        addButton.classList.add('add-favorite-button'); // Reuse the same styling
+        addButton.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent the li click handler from firing
+            addCryptoToTracking(crypto.symbol);
+            if(!isFavorite(crypto.symbol)){
+                addFavorite(crypto.symbol)
+            }
+            displayPrices();
+            displayFavorites();
+            clearSearch();
+
+        });
+
+        listItem.appendChild(addButton);
+
+        listItem.addEventListener('click', () => {
+            searchInput.value = crypto.symbol; // Fill the input with the symbol
+            addCryptoToTracking(crypto.symbol); // Add to tracked
+             if(!isFavorite(crypto.symbol)){
+                addFavorite(crypto.symbol)
+            }
+            displayPrices(); // Update the display
+            displayFavorites();
+            clearSearch(); // Hide suggestions
+        });
+        suggestionsList.appendChild(listItem);
+    });
+
+    suggestionsList.style.display = 'block'; // Show the list
+}
+function clearSearch(){
+     searchInput.value = '';
+    suggestionsList.innerHTML = '';
+    suggestionsList.style.display = 'none';
+}
+
+function handleSearchInput() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    if (searchTerm.length === 0) {
+        clearSearch()
+        return;
+    }
+
+    const filteredCryptos = allCryptos.filter(crypto =>
+        crypto.name.toLowerCase().includes(searchTerm) ||
+        crypto.symbol.toLowerCase().includes(searchTerm)
+    );
+    showSuggestions(filteredCryptos);
+}
+searchInput.addEventListener('input', handleSearchInput);
+
+// Hide suggestions when clicking outside
+document.addEventListener('click', (event) => {
+    if (!searchInput.contains(event.target) && !suggestionsList.contains(event.target)) {
+        suggestionsList.style.display = 'none';
+    }
+});
+
+
+// --- Service Worker Registration (No Changes) ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('ServiceWorker registered with scope:', registration.scope);
+            })
+            .catch(error => {
+                console.error('ServiceWorker registration failed:', error);
+            });
+    });
+}
+
+// --- Initialization ---
+async function initializeApp() {
+    initializeDarkMode();
+    await fetchAllCryptos(); // Fetch the list of cryptocurrencies
+    displayPrices();
+    displayFavorites();
+    setInterval(displayPrices, 30000);
+}
+
+initializeApp(); // Call the initialization function
