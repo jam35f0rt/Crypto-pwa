@@ -4,7 +4,8 @@ const urlsToCache = [
     '/index.html',
     '/style.css',
     '/app.js',
-    // Add other assets you want to cache (e.g., icons)
+    '/manifest.json',
+    // Add icon paths if you have them
 ];
 
 self.addEventListener('install', (event) => {
@@ -27,9 +28,7 @@ self.addEventListener('fetch', (event) => {
                 }
 
                 // IMPORTANT: Clone the request. A request is a stream and
-                // can only be consumed once. Since we are consuming this
-                // once by cache and once by the browser for fetch, we need
-                // to clone the response.
+                // can only be consumed once.
                 const fetchRequest = event.request.clone();
 
                 return fetch(fetchRequest).then(
@@ -39,10 +38,6 @@ self.addEventListener('fetch', (event) => {
                             return response;
                         }
 
-                        // IMPORTANT: Clone the response. A response is a stream
-                        // and because we want the browser to consume the response
-                        // as well as the cache consuming the response, we need
-                        // to clone it so we have two streams.
                         const responseToCache = response.clone();
 
                         caches.open(CACHE_NAME)
@@ -56,8 +51,6 @@ self.addEventListener('fetch', (event) => {
             })
     );
 });
-
-// Update cache when a new service worker is activated.
 self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME]; // List of caches to keep
 

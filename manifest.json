@@ -3,8 +3,8 @@
     "short_name": "Crypto Tracker",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#007bff",
+    "background_color": "#1f2937",
+    "theme_color": "#1f2937",
     "description": "A simple PWA to track cryptocurrency prices.",
     "icons": [
         {

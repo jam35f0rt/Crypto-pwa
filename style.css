@@ -1,16 +1,112 @@
+/* General Styles */
 body {
     font-family: sans-serif;
-    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6; /* Light mode background */
+    color: #1f2937; /* Light mode text */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.dark body {
+    background-color: #1f2937; /* Dark mode background */
+    color: #f3f4f6; /* Dark mode text */
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
     padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: white; /* Light mode card */
+}
+.dark .container{
+    background-color: #374151; /* Dark mode card */
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+
 }
 
-#price-container {
-    margin-top: 20px;
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Dark Mode Toggle Button */
+#dark-mode-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2rem;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    stroke: #1f2937; /* Light mode icon color */
+     transition: opacity 0.3s, transform 0.3s; /* Smooth transition for icons */
+
+}
+
+.dark .icon {
+    stroke: #f3f4f6; /* Dark mode icon color */
+}
+#moon-icon {
+    display: none; /* Hide moon by default */
+}
+
+.dark #sun-icon{
+    display: none;
+}
+
+.dark #moon-icon{
+    display: block;
+}
+
+/* Crypto Price Cards */
 .crypto-price {
-    border: 1px solid #ddd;
+    border: 1px solid #e5e7eb; /* Light mode border */
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    text-align: center;
+      transition: border-color 0.3s, box-shadow 0.3s; /* Add transitions */
+
+}
+
+.dark .crypto-price {
+    border-color: #4b5563; /* Dark mode border */
+}
+
+.crypto-price h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+     color: #374151; /* Slightly darker text for heading */
+
+}
+.dark .crypto-price h2{
+    color: #d1d5db;
+}
+
+.crypto-price p {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.loading, .error {
+    text-align: center;
     padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+}
+
+.error {
+    color: #ef4444; /* Red color for errors */
 }
