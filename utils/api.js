@@ -20,29 +20,27 @@ export async function fetchCryptoPrice(cryptoCode, currency = 'USD') {
         if (data.data && data.data.amount) {
             return data.data.amount;
         } else {
-            throw new Error(`Invalid response for ${cryptoCode}-${currency}`); // More specific error
+            throw new Error(`Invalid response for ${cryptoCode}-${currency}`);
         }
     } catch (error) {
         console.error(`Error fetching ${cryptoCode}-${currency} price:`, error);
-        return null; // Return null on error, handle in UI
+        return null;
     }
 }
-// No longer needed, as allCryptos is prepopulated
-// export async function fetchAllCryptos() { ... }
 
-export async function fetchAllCurrencies() {
+export async function fetchAllCurrencies(baseCurrency = 'USD') { // Base currency parameter!
     try {
-        const response = await fetch('https://api.coinbase.com/v2/exchange-rates?currency=USD');
+        const response = await fetch(`https://api.coinbase.com/v2/exchange-rates?currency=${baseCurrency}`); // Use baseCurrency
         const data = await response.json();
 
         if (data.data && data.data.rates) {
             allCurrencies = Object.keys(data.data.rates).map(code => ({
                 code: code,
-                //  name:  "",  No name available in this API response.
+                // name: "", // No name is available in this API
             }));
-		} else {
-			throw new Error('Invalid response for exchange rates');
-		}
+        } else {
+            throw new Error('Invalid response for exchange rates');
+        }
     } catch (error) {
         console.error('Error fetching all currencies:', error);
         throw error; // Re-throw for handling in the caller
@@ -52,3 +50,4 @@ export async function fetchAllCurrencies() {
 export function setSelectedCurrency(currency) {
     selectedCurrency = currency;
 }
+

@@ -44,7 +44,7 @@ function showCryptoSuggestions(suggestions) {
 
 
 async function addCryptoAndRefresh(symbol) {
-    const price = await fetchCryptoPrice(symbol); // Check if the symbol is valid
+    const price = await fetchCryptoPrice(symbol, selectedCurrency); // Check if the symbol is valid
     if (price !== null) {
         addCryptoToTracking(symbol);
          if(!isFavorite(symbol)) {
@@ -95,9 +95,16 @@ function showCurrencySuggestions(suggestions) {
         listItem.addEventListener('click', () => {
             setSelectedCurrency(currency.code);
             currencySearchInput.value = selectedCurrency; // Keep currency input updated
-            displayPrices();
-            displayFavorites();
-            clearCurrencySearch();
+             fetchAllCurrencies(selectedCurrency) // VERY IMPORTANT: Re-fetch currencies
+                .then(() => { // Use .then() to ensure re-fetch completes
+                    displayPrices();
+                    displayFavorites();
+                    clearCurrencySearch();
+                })
+				.catch(error => {
+					console.error("Error re-fetching currencies:", error);
+                    showMessage("Failed to update currencies. Check your internet connection.");
+				});
         });
         currencySuggestionsList.appendChild(listItem);
     });
