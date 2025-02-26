@@ -2,12 +2,7 @@
 export let allCryptos = [
     { id: 'BTC', name: 'Bitcoin', symbol: 'BTC' },
     { id: 'ETH', name: 'Ethereum', symbol: 'ETH' },
-    { id: 'LTC', name: 'Litecoin', symbol: 'LTC' },
-    { id: 'XRP', name: 'Ripple', symbol: 'XRP' },
-    { id: 'BCH', name: 'Bitcoin Cash', symbol: 'BCH' },
-    { id: 'ADA', name: 'Cardano', symbol: 'ADA' },
-    { id: 'SOL', name: 'Solana', symbol: 'SOL' },
-    { id: 'DOGE', name: 'Dogecoin', symbol: 'DOGE' }
+    { id: 'TOSHI', name: 'Toshi', symbol: 'TOSHI' }
 ];
 export let allCurrencies = [];
 export let selectedCurrency = ''; // Initialize as empty string
