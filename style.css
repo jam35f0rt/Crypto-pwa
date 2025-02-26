@@ -6,107 +6,158 @@ body {
     background-color: #f3f4f6; /* Light mode background */
     color: #1f2937; /* Light mode text */
     transition: background-color 0.3s, color 0.3s; /* Smooth transition */
-}
-
-.dark body {
+  }
+  
+  .dark body {
     background-color: #1f2937; /* Dark mode background */
     color: #f3f4f6; /* Dark mode text */
-}
-
-.container {
+  }
+  
+  .container {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     background-color: white; /* Light mode card */
-}
-.dark .container{
+  }
+  .dark .container {
     background-color: #374151; /* Dark mode card */
     box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-
-}
-
-header {
+  }
+  
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-}
-
-h1 {
+  }
+  
+  h1 {
     font-size: 2rem;
     font-weight: bold;
-}
-
-/* Dark Mode Toggle Button */
-#dark-mode-toggle {
+  }
+  
+  /* Dark Mode Toggle Button */
+  #dark-mode-toggle {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
     font-size: 1.2rem;
-}
-
-.icon {
+  }
+  
+  .icon {
     width: 24px;
     height: 24px;
     stroke: #1f2937; /* Light mode icon color */
-     transition: opacity 0.3s, transform 0.3s; /* Smooth transition for icons */
-
-}
-
-.dark .icon {
+    transition: opacity 0.3s, transform 0.3s; /* Smooth transition for icons */
+  }
+  
+  .dark .icon {
     stroke: #f3f4f6; /* Dark mode icon color */
-}
-#moon-icon {
+  }
+  #moon-icon {
     display: none; /* Hide moon by default */
-}
-
-.dark #sun-icon{
+  }
+  
+  .dark #sun-icon {
     display: none;
-}
-
-.dark #moon-icon{
+  }
+  
+  .dark #moon-icon {
     display: block;
-}
-
-/* Crypto Price Cards */
-.crypto-price {
+  }
+  
+  /* Crypto Price Cards */
+  .crypto-price {
     border: 1px solid #e5e7eb; /* Light mode border */
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 8px;
     text-align: center;
-      transition: border-color 0.3s, box-shadow 0.3s; /* Add transitions */
-
-}
-
-.dark .crypto-price {
+    transition: border-color 0.3s, box-shadow 0.3s; /* Add transitions */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .dark .crypto-price {
     border-color: #4b5563; /* Dark mode border */
-}
-
-.crypto-price h2 {
+  }
+  
+  .crypto-price h2 {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 5px;
-     color: #374151; /* Slightly darker text for heading */
-
-}
-.dark .crypto-price h2{
+    color: #374151; /* Slightly darker text for heading */
+  }
+  .dark .crypto-price h2 {
     color: #d1d5db;
-}
-
-.crypto-price p {
+  }
+  
+  .crypto-price p {
     font-size: 1.5rem;
     font-weight: bold;
-}
-
-.loading, .error {
+  }
+  
+  .loading,
+  .error {
     text-align: center;
     padding: 10px;
-}
-
-.error {
+  }
+  
+  .error {
     color: #ef4444; /* Red color for errors */
-}
+  }
+  
+  /* Search and Add */
+  .search-container {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+  }
+  #search-input{
+      flex-grow: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+  }
+  
+  #add-button {
+      padding: 10px 15px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+  .dark #search-input{
+      color: #fff;
+      border-color: #6b7280;
+      background-color: #242933
+  }
+  .dark #add-button{
+      background-color: #1e40af;
+      color: #fff;
+  }
+  .remove-button {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 1rem;
+  }
+  
+  .dark .remove-button{
+      color: #f87171;
+  }
+  #message-container{
+      text-align: center;
+      margin-bottom: 15px;
+      color: #ef4444;
+  }
+  .dark #message-container{
+      color: #f87171
+  }
+  
