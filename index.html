@@ -2,7 +2,6 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Price Tracker</title>
     <link rel="stylesheet" href="style.css">
@@ -21,24 +20,18 @@
         </header>
 
         <div class="search-container">
-            <input type="text" id="crypto-search-input" placeholder="Search for a cryptocurrency...">
-            <ul id="crypto-suggestions-list"></ul>
-        </div>
-        <div class="search-container">
-            <input type="text" id="currency-search-input" placeholder="Search for a base currency (e.g., USD, EUR)" value="USD">
-            <ul id="currency-suggestions-list"></ul>
+            <input type="text" id="add-input" placeholder="Add Crypto (e.g., BTC-USD)">
+            <button id="add-button">Add</button>
         </div>
         <div id="message-container"></div>
 
         <h2>Favorites</h2>
-        <div id="favorites-container">
-
-        </div>
+        <div id="favorites-container"></div>
 
         <h2>All Tracked</h2>
-        <div id="price-container">
-            </div>
+        <div id="price-container"></div>
     </div>
 
-    <script src="app.js" type="module"></script> </body>
+    <script src="app.js" type="module"></script>
+</body>
 </html>
