@@ -42,7 +42,7 @@ function showCryptoSuggestions(suggestions) {
         listItem.addEventListener('click', () => {
             cryptoSearchInput.value = crypto.symbol;
             addCryptoToTracking(crypto.symbol);
-            if(!isFavorite(crypto.symbol)) {
+             if(!isFavorite(crypto.symbol)) {
                 addFavorite(crypto.symbol)
             }
             displayPrices();
@@ -87,8 +87,8 @@ function showCurrencySuggestions(suggestions) {
         listItem.classList.add('suggestions-list')
         listItem.textContent = currency.code;
         listItem.addEventListener('click', () => {
-            currencySearchInput.value = currency.code;
-            setSelectedCurrency(currency.code)
+            // currencySearchInput.value = currency.code; // Don't change the input value here
+            setSelectedCurrency(currency.code); // Only update the selectedCurrency
             displayPrices();
             displayFavorites();
             clearCurrencySearch();
@@ -99,7 +99,7 @@ function showCurrencySuggestions(suggestions) {
 }
 
 function clearCurrencySearch() {
-     currencySearchInput.value = selectedCurrency;
+    //  currencySearchInput.value = selectedCurrency; // Don't reset the input value here
     currencySuggestionsList.innerHTML = '';
     currencySuggestionsList.style.display = 'none';
 }
@@ -130,10 +130,15 @@ export function setupCryptoSearch() {
 
 export function setupCurrencySearch() {
     currencySearchInput.addEventListener('input', handleCurrencySearchInput);
-    currencySearchInput.value = selectedCurrency
+    // currencySearchInput.value = selectedCurrency // NO - Move this to initializeCurrencyInput
+
     document.addEventListener('click', (event) => {
         if (!currencySearchInput.contains(event.target) && !currencySuggestionsList.contains(event.target)) {
             currencySuggestionsList.style.display = 'none';
         }
     });
+}
+// Add this new function to initialize the currency input:
+export function initializeCurrencyInput() {
+    currencySearchInput.value = selectedCurrency;
 }

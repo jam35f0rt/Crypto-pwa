@@ -24,9 +24,9 @@ export async function fetchAllCryptos() {
         const data = await response.json();
         if (data.data && Array.isArray(data.data)) {
             allCryptos = data.data.map(crypto => ({
-                id: crypto.id,
+                id: crypto.id,  //Keep id
                 name: crypto.name,
-                symbol: crypto.id
+                symbol: crypto.id // Using ID as symbol (Coinbase uses ID)
             }));
         } else {
             throw new Error('Invalid response for currencies');
